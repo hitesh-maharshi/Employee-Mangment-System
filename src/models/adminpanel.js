@@ -22,10 +22,10 @@ const adminpanelSchema = new mongoose.Schema(
             required : [true, "Login time is required"],
         },
         logoutTime :{
-            type : String,
-            default : "Active",
+            type : Date,
+            default : null,
         },
-       ProjectNames: {
+        ProjectNames: {
             type: Map,
             of: Number,
             default: {}

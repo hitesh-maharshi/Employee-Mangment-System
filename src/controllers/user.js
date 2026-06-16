@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { ProjectSummery } from "../models/timeLog.model.js";
 import  Project  from "../models/project.model.js";
 import { AdminPanel } from "../models/adminpanel.js";
 import loginTime from "../models/loginTime.model.js";
@@ -109,6 +110,18 @@ export const loginUser = asyncHandler(async (req, res) => {
         login: new Date()
     });
 
+   const summaries = await ProjectSummery.find({
+    userId: user._id
+    });
+
+    const projectNamesMap = {};
+    let totalHours = 0;
+
+    for (const summ of summaries) {
+    projectNamesMap[summ.project] = summ.totalTime;
+    totalHours += Number(summ.totalTime || 0);
+    }
+
     let adminPanel;
     try {
         adminPanel = await AdminPanel.create({
@@ -116,7 +129,10 @@ export const loginUser = asyncHandler(async (req, res) => {
             loginTime: new Date(),
             name: user.name,
             email: user.email,
+            ProjectNames:projectNamesMap,
+            totalHoursWorked:totalHours
         });
+        
     } catch (err) {
         console.error("AdminPanel save error:", err.message);
     }
@@ -158,6 +174,25 @@ export const logoutUser = asyncHandler(async (req, res) => {
         returnDocument: "after",
     }
 );
+
+    const userlogout = await AdminPanel.findOneAndUpdate(
+        {
+            userId: req.user._id,
+            logoutTime: null,
+            
+        },
+        {
+            $set: {
+                logoutTime: new Date(),
+                
+            }
+        },
+        {
+            sort: { loginTime: -1 },
+            returnDocument: "after",
+        }
+    );
+
 
 if (!session) {
     throw new ApiError(404, "No active login session found");
@@ -249,5 +284,78 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
     return res.status(200).json(
         new ApiResponse(200, {}, "Password reset successfully. Please log in with your new password.")
+    );
+});
+
+export const getDashboard = asyncHandler(async (req, res) => {
+    if (!req.user?._id) {
+        throw new ApiError(401, "User not authenticated or ID not found");
+    }
+
+    const user = await User.findById(req.user._id).select("-password -refreshToken");
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const projectQuery = user.role === "admin"
+        ? {}
+        : { assignedUser: user._id };
+
+    const totalProjects = await Project.countDocuments(projectQuery);
+
+    const summaries = await ProjectSummery.find({ userId: user._id });
+    const totalHours = summaries.reduce(
+        (acc, summary) => acc + Number(summary.totalTime || 0),
+        0
+    );
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                totalProjects,
+                totalHours,
+            },
+            "Dashboard data fetched successfully"
+        )
+    );
+});
+
+export const deleteUser = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    if (user.role === "admin") {
+        throw new ApiError(403, "Admin users cannot be deleted");
+    }
+
+    await User.findByIdAndDelete(id);
+
+    return res.status(200).json(
+        new ApiResponse(200, {}, "User deleted successfully")
+    );
+});
+
+export const logHistory = asyncHandler(async (req, res) => {
+    if (!req.user?._id) {
+        throw new ApiError(401, "User not authenticated or ID not found");
+    }
+    const logHistories = await loginTime.find({ user: req.user._id });
+
+    if (!logHistories) {
+        throw new ApiError(404, "No login histories found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, logHistories, "Log histories fetched successfully")
     );
 });

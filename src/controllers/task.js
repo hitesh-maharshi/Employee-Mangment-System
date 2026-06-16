@@ -94,9 +94,6 @@ export const getTaskById = asyncHandler(async (req, res)=>{
         assignedUserId: req.user._id
     });
 
-    if (task.length === 0) {
-        throw new ApiError(404, "Task not found");
-    }
 
     return res.status(200).json(
         new ApiResponse(200, task, "Task fetched successfully")
@@ -104,16 +101,23 @@ export const getTaskById = asyncHandler(async (req, res)=>{
 
 });
 
-export const markAsDone = asyncHandler(async (req, res)=>{
-    const {id} = req.params;
+export const markAsDone = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
     const task = await Task.findById(id);
-    if(!task){
+
+    if (!task) {
         throw new ApiError(404, "Task not found");
     }
-    task.status = "done";
-    await task.save();
-    return res.status(200).json(
-        new ApiResponse(200, task, "Task marked as done successfully")
-    );
 
+    task.status = "completed";
+    await task.save();
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            task,
+            "Task marked as done successfully"
+        )
+    );
 });

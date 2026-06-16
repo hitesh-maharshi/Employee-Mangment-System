@@ -32,7 +32,7 @@ const getAllReports = asyncHandler(async (req, res) => {
 
 const getUserReports = asyncHandler(async (req, res) => {
     const {id} = req.params;
-    const reports = await Report.findById(id);
+    const reports = await Report.find({ userId: id });
     if(!reports){
         throw new ApiError(404, "No reports found");
     }
@@ -41,5 +41,23 @@ const getUserReports = asyncHandler(async (req, res) => {
     );
 });
 
+const updateReport = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { report } = req.body;
+    if (!report || String(report).trim() === "") {
+        throw new ApiError(400, "Report text is required");
+    }
+    const updatedReport = await Report.findByIdAndUpdate(
+        id,
+        { $set: { report } },
+        { returnDocument: "after" }
+    );
+    if (!updatedReport) {
+        throw new ApiError(404, "Report not found");
+    }
+    return res.status(200).json(
+        new ApiResponse(200, updatedReport, "Report updated successfully")
+    );
+});
 
-export { createReport, getAllReports, getUserReports };
+export { createReport, getAllReports, getUserReports, updateReport };

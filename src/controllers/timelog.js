@@ -9,14 +9,11 @@ export const saveTime = asyncHandler(async (req, res) => {
     const { project, totalTime, description } = req.body;
 
 
-    const time = Number(totalTime);
+    const totaltime = Number(totalTime);
 
-    if (totalTime === undefined) {
-    throw new ApiError(400, "totalTime is required");
-    }
 
-    if (!project || isNaN(time)) {
-        throw new ApiError(400, "Valid project and totalTime are required");
+   if (!project || isNaN(totaltime) || totaltime <= 0) {
+    throw new ApiError(400, "Valid project and totalTime are required");
     }
 
     let userProjectSummary;
@@ -27,7 +24,7 @@ export const saveTime = asyncHandler(async (req, res) => {
     });
 
     if (existing) {
-        existing.totalTime += time;
+        existing.totalTime += totaltime;
         if (description) {
             existing.description = description;
         }
@@ -37,7 +34,7 @@ export const saveTime = asyncHandler(async (req, res) => {
         userProjectSummary = await ProjectSummery.create({
             userId: req.user._id,
             project,
-            totalTime: time,
+            totalTime:totaltime,
             description
         });
     }
@@ -63,7 +60,8 @@ export const saveTime = asyncHandler(async (req, res) => {
         }
     },
     {
-        new: true,
+        sort: { loginTime: -1 },
+        returnDocument: 'after',
         runValidators: true
     }
     );
@@ -101,14 +99,42 @@ export const userProjectSummery = asyncHandler(async (req, res) => {
     const userId = req.user._id;
     const projectSummery = await ProjectSummery.find({ userId: userId });
     return res.status(200).json(
-        new ApiResponse(200, userProjectSummery, "Project summery fetched successfully")
+        new ApiResponse(200, projectSummery, "Project summery fetched successfully")
     );
 });
 
-export const deleteTime = asyncHandler(async (req, res) => {
+
+export const deleteTimeLog = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const timeLog = await TimeLog.findByIdAndDelete(id);
+
+    const timelog = await TimeLog.findById(id);
+
+    if (!timelog) {
+        throw new ApiError(404, "TimeLog not found");
+    }
+
+    await TimeLog.findByIdAndDelete(id);
+
+    const summary = await ProjectSummery.findOne({
+        userId: timelog.user,
+        project: timelog.project
+    });
+
+    if (summary) {
+        summary.totalTime -= timelog.totalTime;
+
+        if (summary.totalTime <= 0) {
+            await ProjectSummery.findByIdAndDelete(summary._id);
+        } else {
+            await summary.save();
+        }
+    }
+
     return res.status(200).json(
-        new ApiResponse(200, timeLog, "Time deleted successfully")
+        new ApiResponse(
+            200,
+            {},
+            "TimeLog deleted successfully"
+        )
     );
 });
