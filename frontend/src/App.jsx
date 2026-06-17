@@ -15,6 +15,25 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 
+import axios from "axios";
+
+// 🔐 Global Axios Interceptor to catch expired JWT tokens
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // The JWT token has expired or is invalid
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("currentUser");
+      
+      // Redirect to login page to end session completely
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
+
 function App() {
   return (
     <BrowserRouter>

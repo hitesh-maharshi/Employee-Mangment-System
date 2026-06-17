@@ -23,6 +23,13 @@ async function apiCall(endpoint, method = 'GET', body = null) {
   const json = await response.json();
 
   if (!response.ok) {
+    if (response.status === 401) {
+      // Token expired, log user out immediately
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("currentUser");
+      window.location.href = "/";
+    }
     throw new Error(json.message || `API Error: ${response.status}`);
   }
 
