@@ -11,12 +11,14 @@ const reportSchema = new mongoose.Schema(
                 required : [true, "Report is required"],
                 trim : true
         },
+        date : {
+            type : Date,
+            default : Date.now
+        }
 
     },
     {
-        timestamps : {
-            createdAt : "created_at",
-        }
+        timestamps : true
     }
 );
 

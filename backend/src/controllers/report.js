@@ -31,14 +31,14 @@ const getAllReports = asyncHandler(async (req, res) => {
 });
 
 const getUserReports = asyncHandler(async (req, res) => {
-    const {id} = req.params;
-    const reports = await Report.find({ userId: id });
-    if(!reports){
-        throw new ApiError(404, "No reports found");
+    if (!req.user?._id) {
+        throw new ApiError(401, "User not authenticated or ID not found");
     }
-    return res.status(200).json(
-        new ApiResponse(200, reports, "Reports fetched successfully")
-    );
+   const reports = await Report.find({ userId: req.user._id });
+   
+   return res.status(200).json(
+       new ApiResponse(200, reports, "Reports fetched successfully")
+   );
 });
 
 const updateReport = asyncHandler(async (req, res) => {
@@ -60,4 +60,15 @@ const updateReport = asyncHandler(async (req, res) => {
     );
 });
 
-export { createReport, getAllReports, getUserReports, updateReport };
+const deleteReport = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const deletedReport = await Report.findByIdAndDelete(id);
+    if (!deletedReport) {
+        throw new ApiError(404, "Report not found");
+    }
+    return res.status(200).json(
+        new ApiResponse(200, deletedReport, "Report deleted successfully")
+    );
+});
+
+export { createReport, getAllReports, getUserReports, updateReport, deleteReport };
