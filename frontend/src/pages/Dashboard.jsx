@@ -29,7 +29,7 @@ function Dashboard() {
       email: data.email,
       role: data.role,
     });
-    // setTotalProjects(data.totalProjects || 0);
+    setTotalProjects(data.totalProjects || 0);
     setTotalHours(data.totalHours || 0);
     setLoading(false);
   };
