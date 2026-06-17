@@ -1,0 +1,58 @@
+/* ===== Login Info - Same Theme as Dashboard ===== */
+
+.login-info-container-lgi {
+  min-height: 100vh;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  font-family: "Poppins", sans-serif;
+  color: #e2e8f0;
+   margin-left: var(--sidebar-width);
+}
+
+/* Title */
+.login-info-container-lgi h2 {
+  font-size: 34px;
+  margin-bottom: 40px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Login Cards */
+
+.login-card-lgi {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  padding: 28px 35px;
+  margin-bottom: 25px;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+  transition: 0.35s ease;
+}
+
+/* Hover Premium Lift */
+.login-card-lgi:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 30px 70px rgba(56, 189, 248, 0.45);
+}
+
+/* Text Styling */
+
+.login-card-lgi p {
+  margin: 12px 0;
+  font-size: 16px;
+  letter-spacing: 0.7px;
+  opacity: 0.95;
+}
+
+.login-card-lgi strong {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .login-info-container-lgi {
+    margin-left: 0;
+    padding: 20px;
+  }
+}

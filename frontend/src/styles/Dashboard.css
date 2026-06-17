@@ -1,0 +1,134 @@
+/* ===== Premium User Dashboard UI (Unique classname applied) ===== */
+
+.dashboard-dsb {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  font-family: "Poppins", sans-serif;
+  color: #e2e8f0;
+}
+
+.content-dsb {
+  margin-left: 240px;
+  padding: 60px 50px;
+  width: 100%;
+}
+
+/* Logout Button */
+.logout-btn-dsb {
+  float: right;
+  padding: 10px 24px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+  box-shadow: 0 12px 30px rgba(239,68,68,0.4);
+  transition: 0.3s ease;
+}
+
+.logout-btn-dsb:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* Welcome Title */
+.content-dsb h1 {
+  font-size: 36px;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+/* Cards Layout */
+.cards-dsb {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+/* Card Base */
+.card-dsb {
+  padding: 45px 35px;
+  border-radius: 24px;
+  backdrop-filter: blur(18px);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.card-dsb h3 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.card-dsb p {
+  font-size: 15px;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.card-dsb:hover {
+  transform: translateY(-8px) scale(1.04);
+}
+
+/* Card Variants */
+.blue-dsb {
+  border: 2px solid #38bdf8;
+}
+
+.green-dsb {
+  border: 2px solid #22c55e;
+}
+
+.purple-dsb {
+  border: 2px solid #a855f7;
+}
+
+/* ===== Premium Loader ===== */
+
+.loader-container {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 6px solid rgba(255,255,255,0.1);
+  border-top: 6px solid #38bdf8;
+  border-right: 6px solid #6366f1;
+  animation: premiumSpin 1s linear infinite;
+  box-shadow:
+    0 0 25px rgba(56,189,248,0.5),
+    0 0 45px rgba(99,102,241,0.3);
+}
+
+@keyframes premiumSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-dsb {
+    flex-direction: column;
+  }
+  .content-dsb {
+    margin-left: 0;
+    padding: 20px;
+  }
+  .cards-dsb {
+    grid-template-columns: 1fr;
+  }
+  .logout-btn-dsb {
+    float: none;
+    margin-bottom: 20px;
+  }
+}

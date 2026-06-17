@@ -1,0 +1,73 @@
+/* ===== Premium Daily Report UI ===== */
+
+.report-container-rpt {
+  margin-left: 220px; /* Sidebar space */
+  padding: 40px 50px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  font-family: "Poppins", sans-serif;
+  color: #e2e8f0;
+}
+
+/* Title */
+.report-title-rpt {
+  font-size: 34px;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #38bdf8, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+/* Textarea */
+.report-textarea-rpt {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  resize: none;
+  color: white;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
+  transition: 0.3s;
+}
+
+.report-textarea-rpt:focus {
+  box-shadow: 0 0 15px #38bdf8;
+}
+
+/* Button */
+.report-btn-rpt {
+  margin-top: 20px;
+  padding: 12px 28px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(90deg, #2563eb, #38bdf8);
+  box-shadow: 0 12px 35px rgba(56,189,248,0.4);
+  transition: 0.3s;
+}
+
+.report-btn-rpt:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 18px 45px rgba(56,189,248,0.6);
+}
+
+.report-btn-rpt:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .report-container-rpt {
+    margin-left: 0;
+    padding: 20px;
+  }
+}

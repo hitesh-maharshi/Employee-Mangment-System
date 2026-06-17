@@ -1,0 +1,103 @@
+/* ===== Premium My Tasks UI (Aligned with Dashboard) ===== */
+
+.tasks-container-tsk {
+  margin-left: 220px; /* Sidebar space */
+  padding: 40px 50px !important; /* 🔥 override inline */
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  font-family: "Poppins", sans-serif;
+  color: #e2e8f0;
+}
+
+/* Title */
+.tasks-title-tsk {
+  font-size: 36px;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #38bdf8, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+/* No tasks */
+.no-tasks-tsk {
+  font-size: 15px;
+  opacity: 0.85;
+  margin-bottom: 20px;
+}
+
+/* Loading */
+.tasks-loading-tsk {
+  margin-left: 220px;
+  padding: 40px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+/* Task Card (Premium Glass) */
+.task-card-tsk {
+  padding: 25px !important; /* override inline */
+  margin-bottom: 20px !important;
+  border-radius: 20px !important;
+
+  background: rgba(255,255,255,0.06) !important;
+  backdrop-filter: blur(18px);
+  border: none !important;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  transition: 0.3s ease;
+}
+
+.task-card-tsk:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+
+/* Title */
+.task-title-tsk {
+  font-size: 22px;
+  margin-bottom: 8px;
+  color: #38bdf8;
+}
+
+/* Description */
+.task-desc-tsk {
+  font-size: 14px;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+/* Status */
+.task-status-tsk {
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+/* Button */
+.task-btn-tsk {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  transition: 0.3s;
+}
+
+.task-btn-tsk:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 25px rgba(34,197,94,0.5);
+}
+
+@media (max-width: 768px) {
+  .tasks-container-tsk {
+    margin-left: 0;
+    padding: 20px !important;
+  }
+  .tasks-loading-tsk {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
