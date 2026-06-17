@@ -29,7 +29,9 @@ function Dashboard() {
       email: data.email,
       role: data.role,
     });
+    if(data.role==="employee"){
     setTotalProjects(data.totalProjects || 0);
+    }
     setTotalHours(data.totalHours || 0);
     setLoading(false);
   };
