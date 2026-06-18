@@ -160,91 +160,98 @@ function AddReport() {
     );
   }
 
-  return (
-    <div className="report-container-rpt" style={{ padding: "30px", maxWidth: "900px", margin: "0 auto", fontFamily: "'Inter', sans-serif" }}>
-      <h2 className="report-title-rpt" style={{ borderBottom: "2px solid #eee", paddingBottom: "10px" }}>
-        {editingReportId ? "✏️ Edit Work Report" : `📝 Daily Work Report (${today})`}
-      </h2>
+ return (
+  <div className="report-container-rpt">
+    <h2 className="report-title-rpt">
+      {editingReportId
+        ? "✏️ Edit Work Report"
+        : `📝 Daily Work Report (${today})`}
+    </h2>
 
-      {/* Add / Edit New Report */}
-      <div className="report-form-rpt" style={{ backgroundColor: "#f9f9f9", padding: "20px", borderRadius: "10px", marginBottom: "30px" }}>
-        <textarea
-          className="report-textarea-rpt"
-          rows="6"
-          value={report}
-          onChange={(e) => setReport(e.target.value)}
-          placeholder="Write today's work report..."
-          style={{ width: "100%", padding: "15px", borderRadius: "8px", border: "1px solid #ccc", boxSizing: "border-box", fontSize: "16px" }}
-        />
+    {/* Add / Edit Report */}
+    <div className="report-form-rpt">
+      <textarea
+        className="report-textarea-rpt"
+        rows="6"
+        value={report}
+        onChange={(e) => setReport(e.target.value)}
+        placeholder="Write today's work report..."
+      />
 
-        <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-          <button
-            className="submit-btn-rpt"
-            onClick={handleSubmit}
-            disabled={loading}
-            style={{ padding: "10px 20px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "5px", cursor: "pointer", fontSize: "16px" }}
-          >
-            {loading ? "Saving..." : (editingReportId ? "Update Report" : "Submit Report")}
+      <div className="report-form-actions-rpt">
+        <button
+          className="submit-btn-rpt"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading
+            ? "Saving..."
+            : editingReportId
+            ? "Update Report"
+            : "Submit Report"}
+        </button>
+
+        {editingReportId && (
+          <button className="cancel-btn-rpt" onClick={cancelEdit}>
+            Cancel Edit
           </button>
-          
-          {editingReportId && (
-            <button
-              onClick={cancelEdit}
-              style={{ padding: "10px 20px", backgroundColor: "#6c757d", color: "white", border: "none", borderRadius: "5px", cursor: "pointer", fontSize: "16px" }}
-            >
-              Cancel Edit
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Report List */}
-      <div className="report-list-rpt">
-        <h3 style={{ borderBottom: "2px solid #eee", paddingBottom: "10px" }}>🗂️ My Previous Reports</h3>
-
-        {reports.length === 0 ? (
-          <p>No reports found.</p>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "20px" }}>
-            {reports.map((item) => {
-              const d = item.date || item.createdAt || item.created_at;
-              const dateStr = d ? new Date(d).toLocaleDateString() : "Unknown Date";
-
-              return (
-                <div className="report-card-rpt" key={item._id} style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "15px", backgroundColor: "#fff" }}>
-                  <div className="report-header-rpt" style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-                    <span style={{ fontWeight: "bold", color: "#333" }}>
-                      📅 {dateStr}
-                    </span>
-                    <div className="report-actions-rpt" style={{ display: "flex", gap: "10px" }}>
-                      <button
-                        className="update-btn-rpt"
-                        onClick={() => handleEdit(item)}
-                        style={{ padding: "5px 15px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="delete-btn-rpt"
-                        onClick={() => deleteReport(item._id)}
-                        style={{ padding: "5px 15px", backgroundColor: "#dc3545", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-
-                  <p className="report-content-rpt" style={{ margin: "0", whiteSpace: "pre-wrap", color: "#555", lineHeight: "1.5" }}>
-                    {item.report}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
         )}
       </div>
     </div>
-  );
+
+    {/* Report List */}
+    <div className="report-list-rpt">
+      <h3 className="report-list-title-rpt">My Previous Reports</h3>
+
+      {reports.length === 0 ? (
+        <p className="no-reports-rpt">No reports found.</p>
+      ) : (
+        <div className="report-cards-container">
+          {reports.map((item) => {
+            const d =
+              item.date ||
+              item.createdAt ||
+              item.created_at;
+
+            const dateStr = d
+              ? new Date(d).toLocaleDateString()
+              : "Unknown Date";
+
+            return (
+              <div className="report-card-rpt" key={item._id}>
+                <div className="report-header-rpt">
+                  <span className="report-date-rpt">
+                    📅 {dateStr}
+                  </span>
+
+                  <div className="report-actions-rpt">
+                    <button
+                      className="update-btn-rpt"
+                      onClick={() => handleEdit(item)}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="delete-btn-rpt"
+                      onClick={() =>
+                        deleteReport(item._id)
+                      }
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+
+                <p className="report-content-rpt">{item.report}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </div>
+);
 }
 
 export default AddReport;

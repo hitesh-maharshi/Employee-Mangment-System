@@ -76,6 +76,8 @@ function TimeLog() {
       return alert("Missing project or description");
     }
 
+    pauseTimer();
+
     const totalHours = getElapsedHours();
     const proj = projects.find((p) => p._id === selectedProject);
 

@@ -152,7 +152,7 @@ function AdminDashboard() {
     setSelectedUser(task.assignedUser);
   };
 
-  // ✅ Loader UI
+  //  Loader UI
   if (loading) {
     return (
       <div className="loader-container">
@@ -308,8 +308,9 @@ function AdminDashboard() {
 
                         <td>
                           <button
+                            className="view-btn-adm"
                             onClick={() => {
-                              const assignedUserId = users.find((u) => u.email === log.email)?._id;
+                              const assignedUserId = log.userId || users.find((u) => u.email === log.email)?._id;
                               setModalData({
                                 email: log.email,
                                 userId: assignedUserId,
@@ -341,8 +342,8 @@ function AdminDashboard() {
             <p>
               {reports.find(
                 (r) =>
-                  r.userId === modalData.userId &&
-                  getDate(r.created_at) === modalData.date
+                 String(r.userId?._id || r.userId) === String(modalData.userId) &&
+                  getDate(r.date || r.createdAt ) === modalData.date
               )?.report || "No report submitted"}
             </p>
 
@@ -353,8 +354,8 @@ function AdminDashboard() {
               {tasks
                 .filter(
                   (t) =>
-                    t.assignedUserId === modalData.userId &&
-                    getDate(t.created_at) === modalData.date
+                    (t.assignedUserId === modalData.userId || t.assignedUser === modalData.email) &&
+                    getDate(t.createdAt || t.created_at) === modalData.date
                 )
                 .map((t, i) => (
                   <li key={i}>

@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { FaClock } from "react-icons/fa";
 import { useTimer } from "../context/TimerContext";
 import "../styles/TimerBanner.css";
@@ -12,13 +12,12 @@ function TimerBanner() {
   }
 
   return (
-    <Link to="/timelog" className="timer-banner-tbn">
-      <FaClock />
+    <div >
+      {/* <FaClock />
       <span>
         Timer {isPaused ? "paused" : "running"}: {formatTime(elapsed)}
-      </span>
-      <span className="timer-banner-link-tbn">Open Time Log</span>
-    </Link>
+      </span> */}
+    </div>
   );
 }
 
