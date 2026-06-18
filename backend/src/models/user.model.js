@@ -44,30 +44,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Virtual for 'id' to map to '_id' to satisfy the 'id' field request
-// userSchema.virtual('id').get(function () {
-//   return this._id.toHexString();
-// });
-
-// // Ensure virtual fields are serialised
-// userSchema.set('toJSON', {
-//   virtuals: true,
-//   transform: function (doc, ret) {
-//     delete ret._id;
-//     delete ret.__v;
-//     return ret;
-//   }
-// });
-
-// userSchema.set('toObject', {
-//   virtuals: true,
-//   transform: function (doc, ret) {
-//     delete ret._id;
-//     delete ret.__v;
-//     return ret;
-//   }
-// });
-
 // Middleware to hash password before saving
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
@@ -94,6 +70,7 @@ userSchema.methods.generateAccessToken = function () {
     {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY ,
     }
+    
   );
 };
 

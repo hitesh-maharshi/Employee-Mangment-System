@@ -9,4 +9,4 @@ router.route("/getAllReports").get(verifyJWT, getAllReports);
 router.route("/getUserReports/:id").get(verifyJWT, getUserReports);
 router.route("/updateReport/:id").put(verifyJWT, updateReport);
 router.route("/deleteReport/:id").delete(verifyJWT, deleteReport);
- export default router;
+export default router;
