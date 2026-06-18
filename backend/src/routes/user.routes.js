@@ -13,14 +13,13 @@ router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(resetPassword);
 
 // Secured routes
-router.use(verifyJWT);
-router.route("/logout").post(logoutUser);
-router.route("/getUserAndId").get(getAllUsersAndId);
-router.route("/getallUsers").get(getAllUsers);
-router.route("/dashboard").get(getDashboard);
-router.route("/deleteUser/:id").delete(isAdmin, deleteUser);
-router.route("/refresh-token").post(refreshAccessToken)
 
-router.route("/logHistory").get(logHistory);
+router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/getUserAndId").get(verifyJWT, getAllUsersAndId);
+router.route("/getallUsers").get(verifyJWT, getAllUsers);
+router.route("/dashboard").get(verifyJWT, getDashboard);
+router.route("/deleteUser/:id").delete(verifyJWT, isAdmin, deleteUser);
+router.route("/refresh-token").post(verifyJWT, refreshAccessToken)
+router.route("/logHistory").get(verifyJWT, logHistory);
 
 export default router;
