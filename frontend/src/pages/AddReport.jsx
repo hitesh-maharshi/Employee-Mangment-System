@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import "../styles/AddReport.css";
+import axiosInstance from "../api/axiosInstance";
 
 function AddReport() {
   const [report, setReport] = useState("");
@@ -38,8 +38,8 @@ function AddReport() {
     try {
       const token = localStorage.getItem("accessToken");
 
-      const res = await axios.get(
-        `https://employee-mangment-system-1.onrender.com/api/v1/reports/getUserReports/${userId}`,
+      const res =  await axiosInstance.get(
+        `/reports/getUserReports/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -80,15 +80,15 @@ function AddReport() {
       const user = userStr ? JSON.parse(userStr) : null;
 
       if (editingReportId) {
-        await axios.put(
-          `https://employee-mangment-system-1.onrender.com/api/v1/reports/updateReport/${editingReportId}`,
+         await axiosInstance.put(
+          `/reports/updateReport/${editingReportId}`,
           { report: report },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         alert("Report Updated ✅");
       } else {
-        await axios.post(
-          "https://employee-mangment-system-1.onrender.com/api/v1/reports/addReport",
+         await axiosInstance.post(
+          "/reports/addReport",
           { report: report },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -117,8 +117,8 @@ function AddReport() {
     try {
       const token = localStorage.getItem("accessToken");
 
-      await axios.delete(
-        `https://employee-mangment-system-1.onrender.com/api/v1/reports/deleteReport/${reportId}`,
+       await axiosInstance.delete(
+        `/reports/deleteReport/${reportId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

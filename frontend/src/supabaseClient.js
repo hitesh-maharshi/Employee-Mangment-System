@@ -1,66 +1,26 @@
 const API_BASE_URL = 'https://employee-mangment-system-1.onrender.com/api/v1';
+import axiosInstance from './api/axiosInstance';
 
 // Helpers to make fetch calls with accessToken automatically attached
-async function apiCall(endpoint, method = 'GET', body = null, isRetry = false) {
-  const token = localStorage.getItem('accessToken');
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const options = {
-    method,
-    headers,
-  };
-
-  if (body) {
-    options.body = JSON.stringify(body);
-  }
-
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-  const json = await response.json();
-
-  if (!response.ok) {
-    // If we get 401 Unauthorized, and we haven't retried yet, attempt to refresh token
-    if (response.status === 401 && !isRetry) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        try {
-          const refreshRes = await fetch(`${API_BASE_URL}/users/refresh-token`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ refreshToken }),
-          });
-
-          if (refreshRes.ok) {
-            const refreshData = await refreshRes.json();
-            const newAccessToken = refreshData.data.accessToken;
-            const newRefreshToken = refreshData.data.refreshToken;
-
-            localStorage.setItem('accessToken', newAccessToken);
-            localStorage.setItem('refreshToken', newRefreshToken);
-
-            // Retry the original API call with the new token
-            return apiCall(endpoint, method, body, true);
-          }
-        } catch (error) {
-          console.error('Failed to refresh token:', error);
-        }
-      }
-
-      // If refresh failed or no refresh token exists, log the user out
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('currentUser');
-      window.location.href = '/';
+async function apiCall(endpoint, method = 'GET', body = null) {
+  try {
+    const config = {
+      method,
+      url: endpoint,
+    };
+    if (body) {
+      config.data = body;
     }
-
-    throw new Error(json.message || `API Error: ${response.status}`);
+    
+    // axiosInstance already has interceptors for attaching the token and refreshing it!
+    const response = await axiosInstance(config);
+    return response.data; 
+  } catch (error) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || `API Error: ${error.response.status}`);
+    }
+    throw new Error(error.message || "API Error");
   }
-
-  return json;
 }
 
 // Global cached list of users to resolve emails/names to MongoDB ObjectIds

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import "../styles/AdminDashboard.css";
 
 function AdminDashboard() {
@@ -29,11 +29,11 @@ function AdminDashboard() {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [adminRes, usersRes, projectsRes, reportsRes, tasksRes] = await Promise.all([
-        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/adminpanel/get-user-info", { headers }),
-        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/users/getallUsers", { headers }),
-        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/projects/getAllProject", { headers }),
-        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/reports/getAllReports", { headers }),
-        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/task/getAllTasks", { headers }),
+        axiosInstance.get("/adminpanel/get-user-info"),
+        axiosInstance.get("/users/getallUsers"),
+        axiosInstance.get("/projects/getAllProject"),
+        axiosInstance.get("/reports/getAllReports"),
+        axiosInstance.get("/task/getAllTasks"),
       ]);
 
       setLogs(adminRes.data?.data || []);
@@ -91,27 +91,25 @@ function AdminDashboard() {
       const headers = { Authorization: `Bearer ${token}` };
 
       if (editingTask) {
-        await axios.put(
-          `https://employee-mangment-system-1.onrender.com/api/v1/task/updateTask/${editingTask._id}`,
+        await axiosInstance.put(
+          `/task/updateTask/${editingTask._id}`,
           {
             taskName: taskTitle,
             description: taskDesc,
             assignedUser: selectedUser,
             assignedUserId: assignedUserObj._id,
-          },
-          { headers }
+          }
         );
         alert("Task Updated ✅");
       } else {
-        await axios.post(
-          "https://employee-mangment-system-1.onrender.com/api/v1/task/addTask",
+        await axiosInstance.post(
+          "/task/addTask",
           {
             taskName: taskTitle,
             description: taskDesc,
             assignedUser: selectedUser,
             assignedUserId: assignedUserObj._id,
-          },
-          { headers }
+          }
         );
         alert("Task Assigned ✅");
       }
@@ -134,9 +132,7 @@ function AdminDashboard() {
 
     try {
       const token = localStorage.getItem("accessToken");
-      await axios.delete(`https://employee-mangment-system-1.onrender.com/api/v1/task/deleteTask/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axiosInstance.delete(`/task/deleteTask/${id}`);
       alert("Task Deleted ❌");
       fetchData();
     } catch (error) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { useTimer } from "../context/TimerContext";
 import "../styles/TimeLog.css";
 
@@ -32,20 +32,10 @@ function TimeLog() {
     try {
       const token = localStorage.getItem("accessToken");
 
-      const projRes = await axios.get(
-        "https://employee-mangment-system-1.onrender.com/api/v1/projects/my-projects",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const projRes = await axiosInstance.get("/projects/my-projects");
       setProjects(projRes.data.data || []);
 
-      const logsRes = await axios.get(
-        "https://employee-mangment-system-1.onrender.com/api/v1/timelog/getUserTime",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const logsRes = await axiosInstance.get("/timelog/getUserTime");
       setEntries(logsRes.data.data || []);
     } catch (err) {
       console.error("Failed to fetch logs data:", err);
@@ -84,19 +74,11 @@ function TimeLog() {
     try {
       const token = localStorage.getItem("accessToken");
 
-      const response = await axios.post(
-        "https://employee-mangment-system-1.onrender.com/api/v1/timelog/saveTime",
-        {
-          project: proj ? proj.projectName : selectedProject,
-          totalTime: totalHours,
-          description: description,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axiosInstance.post("/timelog/saveTime", {
+        project: proj ? proj.projectName : selectedProject,
+        totalTime: totalHours,
+        description: description,
+      });
 
       if (response.data.success) {
         alert("Time log saved successfully ✅");
@@ -115,12 +97,7 @@ function TimeLog() {
 
     try {
       const token = localStorage.getItem("accessToken");
-      await axios.delete(
-        `https://employee-mangment-system-1.onrender.com/api/v1/timelog/deleteTime/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axiosInstance.delete(`/timelog/deleteTime/${id}`);
       setEntries(entries.filter((e) => e._id !== id));
       alert("Time log deleted ❌");
     } catch (err) {
