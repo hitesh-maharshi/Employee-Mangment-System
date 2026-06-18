@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser, loginUser, logoutUser, getAllUsersAndId, getAllUsers, forgotPassword, resetPassword, logHistory, deleteUser, getDashboard } from "../controllers/user.js";
+import { registerUser, loginUser, logoutUser, getAllUsersAndId, getAllUsers, forgotPassword, resetPassword, logHistory, deleteUser, getDashboard, refreshAccessToken } from "../controllers/user.js";
 import { verifyJWT } from "../midelware/authMidleware.js";
 import { isAdmin } from "../midelware/adminMidelware.js";
 
@@ -19,6 +19,7 @@ router.route("/getUserAndId").get(getAllUsersAndId);
 router.route("/getallUsers").get(getAllUsers);
 router.route("/dashboard").get(getDashboard);
 router.route("/deleteUser/:id").delete(isAdmin, deleteUser);
+router.route("/refresh-token").post(refreshAccessToken)
 
 router.route("/logHistory").get(logHistory);
 
