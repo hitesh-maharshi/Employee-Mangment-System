@@ -1,6 +1,6 @@
 import { User } from "../models/user.model.js";
 import { ProjectSummery } from "../models/timeLog.model.js";
-import  Project  from "../models/project.model.js";
+import Project from "../models/project.model.js";
 import { AdminPanel } from "../models/adminpanel.js";
 import loginTime from "../models/loginTime.model.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -111,16 +111,16 @@ export const loginUser = asyncHandler(async (req, res) => {
         login: new Date()
     });
 
-   const summaries = await ProjectSummery.find({
-    userId: user._id
+    const summaries = await ProjectSummery.find({
+        userId: user._id
     });
 
     const projectNamesMap = {};
     let totalHours = 0;
 
     for (const summ of summaries) {
-    projectNamesMap[summ.project] = summ.totalTime;
-    totalHours += Number(summ.totalTime || 0);
+        projectNamesMap[summ.project] = summ.totalTime;
+        totalHours += Number(summ.totalTime || 0);
     }
 
     let adminPanel;
@@ -130,10 +130,10 @@ export const loginUser = asyncHandler(async (req, res) => {
             loginTime: new Date(),
             name: user.name,
             email: user.email,
-            ProjectNames:projectNamesMap,
-            totalHoursWorked:totalHours
+            ProjectNames: projectNamesMap,
+            totalHoursWorked: totalHours
         });
-        
+
     } catch (err) {
         console.error("AdminPanel save error:", err.message);
     }
@@ -159,33 +159,33 @@ export const loginUser = asyncHandler(async (req, res) => {
 export const logoutUser = asyncHandler(async (req, res) => {
     // Update the logout time in the active loginTime record
     const session = await loginTime.findOneAndUpdate(
-    {
-        user: req.user._id,
-        logOut: null,
-        status: "login"
-    },
-    {
-        $set: {
-            logOut: new Date(),
-            status: "logout"
+        {
+            user: req.user._id,
+            logOut: null,
+            status: "login"
+        },
+        {
+            $set: {
+                logOut: new Date(),
+                status: "logout"
+            }
+        },
+        {
+            sort: { login: -1 },
+            returnDocument: "after",
         }
-    },
-    {
-        sort: { login: -1 },
-        returnDocument: "after",
-    }
-);
+    );
 
     const userlogout = await AdminPanel.findOneAndUpdate(
         {
             userId: req.user._id,
             logoutTime: null,
-            
+
         },
         {
             $set: {
                 logoutTime: new Date(),
-                
+
             }
         },
         {
@@ -195,9 +195,9 @@ export const logoutUser = asyncHandler(async (req, res) => {
     );
 
 
-if (!session) {
-    throw new ApiError(404, "No active login session found");
-}
+    if (!session) {
+        throw new ApiError(404, "No active login session found");
+    }
 
     const options = {
         httpOnly: true,
@@ -278,7 +278,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid or expired OTP");
     }
 
-    user.password = newPassword;            
+    user.password = newPassword;
     user.passwordResetToken = null;
     user.passwordResetExpiry = null;
     await user.save();
@@ -373,35 +373,36 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
         )
-    
+
         const user = await User.findById(decodedToken?._id)
-    
+
         if (!user) {
             throw new ApiError(401, "Invalid refresh token")
         }
-    
+
         if (incomingRefreshToken !== user?.refreshToken) {
             throw new ApiError(401, "Refresh token is expired or used")
-            
+
         }
-    
+
         const options = {
             httpOnly: true,
             secure: true
         }
-    
-        const accessToken = user.generateAccessToken();
-    
+
+        const { accessToken, refreshToken: newRefreshToken } = await generateAccessAndRefreshTokens(user._id)
+
         return res
-        .status(200)
-        .cookie("accessToken", accessToken, options)
-        .json(
-            new ApiResponse(
-                200, 
-                {accessToken},
-                "Access token refreshed"
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", newRefreshToken, options)
+            .json(
+                new ApiResponse(
+                    200,
+                    { accessToken, refreshToken: newRefreshToken },
+                    "Access token refreshed"
+                )
             )
-        )
     } catch (error) {
         throw new ApiError(401, error?.message || "Invalid refresh token")
     }

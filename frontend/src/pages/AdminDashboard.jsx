@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axiosInstance from "../api/axiosInstance";
+import axios from "axios";
 import "../styles/AdminDashboard.css";
 
 function AdminDashboard() {
@@ -29,11 +29,11 @@ function AdminDashboard() {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [adminRes, usersRes, projectsRes, reportsRes, tasksRes] = await Promise.all([
-        axiosInstance.get("/adminpanel/get-user-info"),
-        axiosInstance.get("/users/getallUsers"),
-        axiosInstance.get("/projects/getAllProject"),
-        axiosInstance.get("/reports/getAllReports"),
-        axiosInstance.get("/task/getAllTasks"),
+        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/adminpanel/get-user-info", { headers }),
+        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/users/getallUsers", { headers }),
+        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/projects/getAllProject", { headers }),
+        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/reports/getAllReports", { headers }),
+        axios.get("https://employee-mangment-system-1.onrender.com/api/v1/task/getAllTasks", { headers }),
       ]);
 
       setLogs(adminRes.data?.data || []);
@@ -91,25 +91,27 @@ function AdminDashboard() {
       const headers = { Authorization: `Bearer ${token}` };
 
       if (editingTask) {
-        await axiosInstance.put(
-          `/task/updateTask/${editingTask._id}`,
+        await axios.put(
+          `https://employee-mangment-system-1.onrender.com/api/v1/task/updateTask/${editingTask._id}`,
           {
             taskName: taskTitle,
             description: taskDesc,
             assignedUser: selectedUser,
             assignedUserId: assignedUserObj._id,
-          }
+          },
+          { headers }
         );
         alert("Task Updated ✅");
       } else {
-        await axiosInstance.post(
-          "/task/addTask",
+        await axios.post(
+          "https://employee-mangment-system-1.onrender.com/api/v1/task/addTask",
           {
             taskName: taskTitle,
             description: taskDesc,
             assignedUser: selectedUser,
             assignedUserId: assignedUserObj._id,
-          }
+          },
+          { headers }
         );
         alert("Task Assigned ✅");
       }
@@ -132,7 +134,9 @@ function AdminDashboard() {
 
     try {
       const token = localStorage.getItem("accessToken");
-      await axiosInstance.delete(`/task/deleteTask/${id}`);
+      await axios.delete(`https://employee-mangment-system-1.onrender.com/api/v1/task/deleteTask/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       alert("Task Deleted ❌");
       fetchData();
     } catch (error) {

@@ -29,7 +29,7 @@ const createProject = asyncHandler(async (req, res) => {
 });
 
 const getAllProject = asyncHandler(async (req, res) => {
-    const projects = await Project.find();
+    const projects = await Project.find().sort({ created_at: -1 });
 
     return res.status(200).json(
         new ApiResponse(200, projects, "Projects fetched successfully")

@@ -32,25 +32,23 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
         const response = await axios.post(
           "https://employee-mangment-system-1.onrender.com/api/v1/users/refresh-token",
-          { refreshToken },
+          {},
           { withCredentials: true }
         );
 
-        // The backend returns only the new access token inside response.data.data
-        const newAccessToken = response.data.data.accessToken;
+        const newAccessToken = response.localStorage.setItem(
+          "accessToken",
+          newAccessToken
+        );
 
-        localStorage.setItem("accessToken", newAccessToken);
-
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        originalRequest.headers.Authorization =
+          `Bearer ${newAccessToken}`;
 
         return axiosInstance(originalRequest);
       } catch (err) {
         localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("currentUser");
         window.location.href = "/";
       }
     }
