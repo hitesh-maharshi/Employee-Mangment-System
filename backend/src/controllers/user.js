@@ -32,17 +32,17 @@ export const getAllUsers = asyncHandler(async (req, res) => {
     )
 })
 
-// export const getAllUsersAndId = asyncHandler(async (req, res) => {
-//     const users = await User.find({ role: "employee" }).select("name _id");
+export const getAllUsersAndId = asyncHandler(async (req, res) => {
+    const users = await User.find({ role: "employee" }).select("name _id");
 
-//     if (!users) {
-//         throw new ApiError(404, "Users not found");
-//     }
+    if (!users) {
+        throw new ApiError(404, "Users not found");
+    }
 
-//     return res.status(200).json(
-//         new ApiResponse(200, users, "Users fetched successfully")
-//     )
-// })
+    return res.status(200).json(
+        new ApiResponse(200, users, "Users fetched successfully")
+    )
+})
 
 export const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password, role } = req.body;
