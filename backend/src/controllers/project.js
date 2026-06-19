@@ -97,7 +97,7 @@ const getMyProjects = asyncHandler(async (req, res) => {
 
     const projects = await Project.find({
         assignedUser: req.user._id
-    }).populate("assignedUser", "name email role");
+    }).populate("assignedUser", "name email role").sort({ created_at: -1 });
 
     return res.status(200).json(
         new ApiResponse(200, projects, "My projects fetched successfully")
